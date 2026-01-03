@@ -1,0 +1,60 @@
+@using Microsoft.Maui.Storage
+@inject NavigationManager NavigationManager
+
+<footer class="footer px-4 py-2 border-top text-muted">
+    <small>Database: @DisplayPath</small>
+    <div style="float:right">
+        <button class="btn btn-primary" @onclick="SelectDifferentDatabase">Select Different Database</button>
+    </div>
+</footer>
+
+@code {
+    private string DisplayPath = "Unavailable";
+    private bool _isPicking;
+
+    protected override void OnInitialized()
+    {
+        try
+        {
+            // Read the saved DatabaseFilePath preference (falls back to "Not set")
+            DisplayPath = Preferences.Get("DatabaseFilePath", "Not set");
+        }
+        catch
+        {
+            // If Preferences is not available for any reason, show a friendly error
+            DisplayPath = "Unavailable";
+        }
+    }
+
+    private async Task SelectDifferentDatabase()
+    {
+        if (_isPicking)
+            return;
+
+        _isPicking = true;
+        try
+        {
+            var result = await FilePicker.Default.PickAsync();
+            if (result != null)
+            {
+                // FullPath may be null on some platforms — fall back to FileName if needed.
+                var selectedPath = result.FullPath ?? result.FileName;
+
+                Preferences.Set("DatabaseFilePath", selectedPath);
+                DisplayPath = selectedPath;
+                NavigationManager.NavigateTo("/");
+                // StateHasChanged();
+            }
+        }
+        catch (Exception ex)
+        {
+            // Display a short error in the footer if picking fails
+            DisplayPath = $"Error: {ex.Message}";
+            StateHasChanged();
+        }
+        finally
+        {
+            _isPicking = false;
+        }
+    }
+}

@@ -1,0 +1,124 @@
+﻿@page "/questions"
+@using InterviewGeneratorBlazorHybrid.Models
+@using InterviewGeneratorBlazorHybrid.ViewModels
+@using InterviewGeneratorBlazorHybrid.Data
+
+@inject AppDbContextFactory ContextFactory
+@inject QuestionViewModel ViewModel
+@inject NavigationManager Navigation
+
+
+<h3>Questions</h3>
+@* <NavLink class="btn btn-sm btn-primary" href="@($"/categories")">Categories</NavLink> *@
+@if (ViewModel.Categories == null)
+{
+    <p>Loading Core Competencies...</p>
+}
+else if (ViewModel == null)
+{
+    <p>Loading...</p>
+}
+else if (ViewModel.Category == null)
+{
+    <p>Core Competency not found.</p>
+}
+else
+{
+    @if (ViewModel.IsEditMode)
+    {
+        <h5>@((ViewModel.IsAddMode ? "Add" : "Update") + " Question") for <u>@ViewModel.Category.Name</u></h5>
+        <EditForm Model="@ViewModel.QuestionModel" OnValidSubmit="@(() => ViewModel.SaveQuestion())">
+            <div class="mb-2">
+                <InputText @bind-Value="ViewModel.QuestionModel.Text" class="form-control" />
+            </div>
+            <button type="submit" class="btn btn-primary me-2">Save Question</button>
+            <button type="button" class="btn btn-secondary" @onclick="ViewModel.ResetForm">Cancel</button>
+        </EditForm>
+    }
+    else
+    {
+        <h5>Select Core Competency (in dropdown) To See Related Questions</h5>
+        <div class="mb-3">
+
+            <select id="categorySelect" class="form-select" @onchange="OnCategoryChanged" value="@ViewModel.Category.Id">
+                @foreach (var cat in ViewModel.Categories)
+                {
+                    <option value="@cat.Id" selected="@(cat.Id == ViewModel.Category.Id)">
+                        @cat.Name
+                    </option>
+                }
+            </select>
+        </div>
+
+        @if (ViewModel.Category.Name != "")
+        {
+            <div class="mb-3">
+                <button class="btn btn-success" @onclick="ViewModel.AddNewQuestion">
+                    <i class="bi bi-plus-circle"></i> Add New Question
+                </button>
+            </div>
+            <h3>Questions for @ViewModel.Category.Name</h3>
+        }
+
+        @if (!string.IsNullOrEmpty(ViewModel.ErrorMessage))
+        {
+            <div class="alert alert-danger">@ViewModel.ErrorMessage</div>
+        }
+
+        <ul class="list-group mt-3">
+            @foreach (var q in ViewModel.Questions)
+            {
+                <li class="list-group-item d-flex justify-content-between align-items-center">
+                    <span>
+                        <strong>@q.Text</strong> <br />
+                    </span>
+                    <span>
+                        <div class="d-flex flex-nowrap align-items-center gap-2">
+                            <button class="btn btn-sm btn-info me-1" @onclick="() => ViewModel.EditQuestion(q)">Edit</button>
+                            <button class="btn btn-sm btn-danger" @onclick="() => ViewModel.DeleteQuestion(q.Id)">Delete</button>
+                        </div>
+                    </span>
+                </li>
+            }
+        </ul>
+    }
+}
+
+@code {
+
+
+    private Category? Category;
+    // private QuestionViewModel? ViewModel;
+
+    protected override void OnInitialized()
+    {
+        if (Preferences.Get("DatabaseFilePath", "Not Set") == "Not Set")
+        {
+            Navigation.NavigateTo($"/settings");
+        }
+
+        using var db = ContextFactory.CreateDbContext();
+        Category = db.Categories.FirstOrDefault(c => c.Id == ViewModel.CategoryId);
+
+        if (Category != null)
+        {
+            ViewModel.ChangeCategory(ViewModel.CategoryId);
+        }
+
+        ViewModel.LoadCategories();
+    }
+
+    protected override async Task OnParametersSetAsync()
+    {
+        ViewModel.LoadCategories();
+    }
+
+    private async Task OnCategoryChanged(ChangeEventArgs e)
+    {
+        if (int.TryParse(e.Value?.ToString(), out int newCategoryId) && newCategoryId != ViewModel?.Category.Id)
+        {
+            ViewModel.ChangeCategory(newCategoryId);
+            StateHasChanged();
+        }
+    }
+}

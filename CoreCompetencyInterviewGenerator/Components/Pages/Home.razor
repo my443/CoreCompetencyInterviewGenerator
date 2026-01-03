@@ -1,0 +1,65 @@
+﻿@page "/"
+@using InterviewGeneratorBlazorHybrid.ViewModels
+@using InterviewGeneratorBlazorHybrid.Data
+
+@inject InterviewViewModel ViewModel
+@inject NavigationManager Navigation
+@inject AppDbContextFactory ContextFactory
+
+<PageTitle>Home</PageTitle>
+
+<div class="container my-5">
+    <div class="row row-cols-3 g-4 justify-content-center">
+        <div class="col d-flex justify-content-center">
+            <a class="btn btn-primary btn-square d-flex flex-column align-items-center justify-content-center" href="">
+                <span class="bi bi-house-door-fill-nav-menu mb-2" aria-hidden="true"></span>
+                Home
+            </a>
+        </div>
+        <div class="col d-flex justify-content-center">
+            <a class="btn btn-primary btn-square d-flex flex-column align-items-center justify-content-center" href="categories">
+                <span class="bi bi-list-nested-nav-menu mb-2" aria-hidden="true"></span>
+                Core Competencies
+            </a>
+        </div>
+        <div class="col d-flex justify-content-center">
+            <a class="btn btn-primary btn-square d-flex flex-column align-items-center justify-content-center" href="interview">
+                <span class="bi bi-list-nested-nav-menu mb-2" aria-hidden="true"></span>
+                Interview List
+            </a>
+        </div>
+        <div class="col d-flex justify-content-center">
+            <button class="btn btn-primary btn-square d-flex flex-column align-items-center justify-content-center" @onclick="AddNewInterview">
+                <span class="bi bi-plus-square mb-2" aria-hidden="true"></span>
+                Create Interview
+            </button>
+        </div>
+        <div class="col d-flex justify-content-center">
+            <a class="btn btn-primary btn-square d-flex flex-column align-items-center justify-content-center" href="settings">
+                <span class="bi bi-gear mb-2" aria-hidden="true"></span>
+                Settings
+            </a>
+        </div>
+        <div class="col d-flex justify-content-center">
+            <a class="btn btn-primary btn-square d-flex flex-column align-items-center justify-content-center" href="help">
+                <span class="bi bi-question-circle mb-2" aria-hidden="true"></span>
+                Help
+            </a>
+        </div>
+    </div>
+</div>
+
+<style>
+    .btn-square {
+        width: 200vw;
+        height: 75vw;
+        max-width: 200px;
+        max-height: 75px;
+        min-width: 60px;
+        min-height: 10px;
+        padding: 0;
+        font-size: 1rem;       
+        text-align: center;
+        box-sizing: border-box;
+    }
+</style>

@@ -1,0 +1,74 @@
+﻿@page "/interviews"
+@using InterviewGeneratorBlazorHybrid.ViewModels
+@using InterviewGeneratorBlazorHybrid.Models
+@inject InterviewViewModel ViewModel
+@inject NavigationManager Navigation
+
+<h3>Interview Listing</h3>
+@* Edit Mode: @ViewModel.IsEditMode
+Construct Mode: @ViewModel.IsConstructMode *@
+
+<p><span class="alert-danger">@((MarkupString)ErrorMessage)</span></p>
+<p><span class="alert-success">@SuccessMessage</span></p>
+<div class="mb-3">
+    <button class="btn btn-success" @onclick="AddNewInterview">
+        <i class="bi bi-plus-circle"></i> Add New Interview
+    </button>
+</div>
+
+<hr />
+
+@if (ViewModel.Interviews.Count == 0)
+{
+    <div class="alert alert-info">No interviews found. Click "Add New Interview" to create one.</div>
+}
+else
+{
+    <table class="table table-bordered table-hover">
+        <thead class="table-light">
+            <tr>
+                <th>Id</th>
+                <th>Interview Name</th>
+                <th>Date Created</th>
+                <th>Status</th>
+                <th>Questions</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var interview in ViewModel.Interviews)
+            {
+                <tr>
+                    <td>@interview.Id</td>
+                    <td>@interview.InterviewName</td>
+                    <td>@interview.DateCreated.ToString("MMM dd, yyyy")</td>
+                    <td>
+                        @if (interview.IsActive)
+                        {
+                            <span class="badge bg-success">Active</span>
+                        }
+                        else
+                        {
+                            <span class="badge bg-secondary">Inactive</span>
+                        }
+                    </td>
+                    <td>@interview.Questions.Count</td>
+                    <td>
+                        <div class="d-flex flex-nowrap align-items-center gap-2">
+                            <button class="btn btn-sm btn-primary" @onclick="() => GenerateInterview(interview)">
+                                Save Document
+                            </button>
+                            <button class="btn btn-sm btn-info" @onclick="() => EditInterview(interview)">
+                                Edit
+                            </button>
+                            <button class="btn btn-sm btn-danger" @onclick="() => DeleteInterviewWithConfirm(interview)">
+                                <i class="bi bi-trash"></i> Delete
+                            </button>
+                        </div>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+

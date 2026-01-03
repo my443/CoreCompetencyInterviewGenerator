@@ -1,0 +1,52 @@
+﻿@using InterviewGeneratorBlazorHybrid.Models
+@using InterviewGeneratorBlazorHybrid.ViewModels
+@using InterviewGeneratorBlazorHybrid.Data
+
+@inject AppDbContextFactory ContextFactory
+@inject InterviewViewModel ViewModel
+
+<div class="mb-3">
+    <label>Select Core Competency</label>
+    <select class="form-select" @onchange="OnCategoryChanged">
+        <option value="">-- Select Core Competency --</option>
+        @foreach (var cat in ViewModel.Categories)
+        {
+            <option value="@cat.Id" selected="@(ViewModel.SelectedCategoryId == cat.Id)">
+                @cat.Name
+            </option>
+        }
+    </select>
+</div>
+
+@if (ViewModel.SelectedCategoryId != null)
+{
+    <div class="mb-3">
+        <label>Select Question</label>
+        <select class="form-select" @onchange="OnQuestionChanged">
+            <option value="">-- Select Question --</option>
+            @foreach (var q in ViewModel.AvailableQuestions)
+            {
+                <option value="@q.Id" selected="@(ViewModel.SelectedQuestionId == q.Id)">
+                    @q.Text
+                </option>
+            }
+        </select>
+        <button class="btn btn-primary mt-2" @onclick="AddQuestion" disabled="@(ViewModel.SelectedQuestionId == null)">Add to Interview</button>
+    </div>
+}
+
+@if (ViewModel.Interview.Questions.Any())
+{
+    <h4>Interview Questions</h4>
+    <ul class="list-group">
+        @foreach (var q in ViewModel.Interview.Questions)
+        {
+            <li class="list-group-item">
+                <strong>@q.Text </strong>(@q.Category.Name)<br />
+                <button class="btn btn-sm btn-danger" @onclick="() => DeleteQuestion(q.Id)">
+                    <i class="bi bi-trash"></i> Delete
+                </button>
+            </li>
+        }
+    </ul>
+}

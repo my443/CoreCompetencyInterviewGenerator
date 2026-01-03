@@ -1,0 +1,60 @@
+﻿@page "/settings"
+@using InterviewGeneratorBlazorHybrid.Data
+@using ViewModels
+
+@inject NavigationManager NavigationManager
+@inject AppDbContextFactory ContextFactory
+@inject CategoryViewModel CategoryViewModel
+@inject InterviewViewModel InterviewViewModel
+@inject QuestionViewModel QuestionViewModel
+
+<h3>Interview Generator Settings</h3>
+
+<p><span class="alert-warning">@GeneralMessage</span></p>
+<p><span class="alert-danger">@ErrorMessage</span></p>
+<p><span class="alert-success">@SuccessMessage</span></p>
+
+<div class="container text-center my-5">
+    <div class="d-flex justify-content-between px-5" role="group" aria-label="Database options">
+        <div class="row g-3">
+            <!-- First Row -->
+            <div class="col-12 col-sm-6">
+                <!-- w-100 makes the button take up the full column width -->
+                <button class="btn btn-success w-100" @onclick="AddNewDatabase">Add New Database</button>
+            </div>
+            <div class="col-12 col-sm-6">
+                <button class="btn btn-success w-100" @onclick="CreateSampleDatabase">Create Sample Database</button>
+            </div>
+
+            <!-- Second Row -->
+            <div class="col-12 col-sm-6">
+                <button class="btn btn-success w-100" @onclick="SelectDifferentDatabase">Select A Database</button>
+            </div>
+            <div class="col-12 col-sm-6">
+                <button class="btn btn-success w-100" @onclick="SelectDifferentDocTemplate">Select A Interview Document Template</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="container mt-4">
+    <div class="row">
+        <div class="col-md-6">
+
+            <table class="table table-bordered table-striped">
+                <tbody>
+                    <tr>
+                        <td><strong>Current Database</strong></td>
+                        <td><code style="color: black;">@DisplayPath</code></td>
+                    </tr>
+                    <tr>
+                        <td><strong>Current Interview Document Template</strong></td>
+                        <td><code style="color: black;">@InterviewViewModel.InterviewTemplatePath</code></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+

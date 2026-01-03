@@ -1,0 +1,39 @@
+﻿@using InterviewGeneratorBlazorHybrid.Models
+@using InterviewGeneratorBlazorHybrid.ViewModels
+@using InterviewGeneratorBlazorHybrid.Data
+
+@inject AppDbContextFactory ContextFactory
+@inject InterviewViewModel ViewModel
+@if (!ViewModel.IsConstructMode)
+{
+    <button type="button" class="btn btn-primary me-2" @onclick="ViewModel.EnterConstructionMode">Add and Remove Questions</button>
+}
+else
+{
+    <button type="button" class="btn btn-primary me-2" @onclick="ViewModel.ExitConstructionMode">Edit Interview Name, Date & Status</button>
+}
+
+<button type="button" class="btn btn-secondary" @onclick="ViewModel.ResetForm">Return To Interview List</button>
+<EditForm Model="@ViewModel.Interview" OnValidSubmit="@(() => ViewModel.SaveInterview())">
+    @if (!ViewModel.IsConstructMode)
+    {
+        <div class="mb-3">
+            <label>Interview Name</label>
+            <InputText class="form-control" @bind-Value="ViewModel.InterviewName" />
+        </div>
+        <div class="mb-3">
+            <label>Interview Date</label>
+            <InputDate class="form-control" @bind-Value="ViewModel.InterviewDate" />
+        </div>
+        <div class="mb-3">
+            <label>Interview Status</label>
+            <select class="form-select" @bind="ViewModel.InterviewIsActiveString">
+                <option value="true">Active</option>
+                <option value="false">Inactive</option>
+            </select>
+        </div>
+        <button type="submit" class="btn btn-primary me-2">Save</button>
+    }
+
+</EditForm>
+

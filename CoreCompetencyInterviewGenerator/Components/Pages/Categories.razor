@@ -1,0 +1,94 @@
+﻿@page "/categories"
+@using InterviewGeneratorBlazorHybrid.ViewModels
+@inject CategoryViewModel ViewModel
+@inject QuestionViewModel QuestionViewModel
+@inject NavigationManager Navigation
+
+
+<h3>Core Competency Listing</h3>
+
+@if (ViewModel.IsEditMode)
+{
+    <h6>@(ViewModel.IsAddMode ? "Add Category" : "Edit Competency")</h6>
+    <div class="mb-3">
+        <label>Name:</label>
+        <input class="form-control" @bind="ViewModel.CategoryModel.Name" />
+    </div>
+
+    <div class="mb-3">
+        <label>Description:</label>
+        <textarea class="form-control" @bind="ViewModel.CategoryModel.Description"></textarea>
+    </div>
+}
+@if (!string.IsNullOrEmpty(ViewModel.ErrorMessage))
+{
+    <div class="text-danger">@ViewModel.ErrorMessage</div>
+}
+
+@if (ViewModel.IsEditMode)
+{
+    <button class="btn btn-primary" @onclick="ViewModel.SaveCategory">
+        Save
+    </button>
+    <button class="btn btn-secondary ms-2" @onclick="ViewModel.ResetForm">Cancel</button>
+}
+@if (!ViewModel.IsEditMode)
+{
+    <button class="btn btn-primary" @onclick="ViewModel.AddCategory">
+        New Competency
+    </button>
+}
+<hr />
+@if (!ViewModel.IsEditMode)
+{
+    @if (ViewModel.Categories.Count == 0)
+    {
+        <div>No categories found.</div>
+    }
+    else
+    {
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th>Id</th>
+                    <th>Name</th>
+                    <th>Description</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var cat in ViewModel.Categories)
+                {
+                    <tr>
+                        <td>@cat.Id</td>
+                        <td>@cat.Name</td>
+                        <td>@cat.Description</td>
+                        <td>
+                            <div class="d-flex flex-nowrap align-items-center gap-2">
+                                <button class="btn btn-sm btn-info" @onclick="() => ViewModel.EditCategory(cat)">Edit</button>
+                                <button class="btn btn-sm btn-danger" @onclick="() => ViewModel.DeleteCategory(cat.Id)">Delete</button>
+                                <NavLink class="btn btn-sm btn-primary" @onclick="() => GoToQuestions(cat.Id)">Questions</NavLink>
+                            </div>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+}
+
+@code {
+    protected override void OnInitialized()
+    {
+        if (Preferences.Get("DatabaseFilePath", "Not Set") == "Not Set")
+        {
+            Navigation.NavigateTo($"/settings");
+        }
+    }
+    public void GoToQuestions(int categoryId)
+    {
+        QuestionViewModel.ChangeCategory(categoryId);
+        Navigation.NavigateTo($"/questions");
+    }
+
+}

@@ -1,0 +1,67 @@
+@page "/interview"
+@using InterviewGeneratorBlazorHybrid.Models
+@using InterviewGeneratorBlazorHybrid.ViewModels
+@using InterviewGeneratorBlazorHybrid.Data
+
+@inject AppDbContextFactory ContextFactory
+@inject InterviewViewModel ViewModel
+
+<h3>Build Interview</h3> 
+@* Edit Mode: @ViewModel.IsEditMode
+Construct Mode: @ViewModel.IsConstructMode *@
+
+@if (!string.IsNullOrEmpty(ViewModel.SuccessMessage))
+{
+    <div class="alert alert-success alert-dismissible fade show" role="alert">
+        @ViewModel.SuccessMessage
+        <button type="button" class="btn-close" @onclick="() => ViewModel.SuccessMessage = null"></button>
+    </div>
+}
+
+
+@if (!string.IsNullOrEmpty(ViewModel.ErrorMessage))
+{
+    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+        @ViewModel.ErrorMessage
+        <button type="button" class="btn-close" @onclick="() => ViewModel.ErrorMessage = null"></button>
+    </div>
+}
+@* 
+<ul>
+    <li>IsAddMode: @ViewModel.IsAddMode</li>
+    <li>IsEditMode: @ViewModel.IsEditMode</li>
+    <li>IsConstructMode: @ViewModel.IsConstructMode</li>
+</ul> *@
+
+
+@* <button class="btn btn-success mb-3" @onclick="SaveInterview"
+        disabled="@(string.IsNullOrWhiteSpace(ViewModel.InterviewName) || !ViewModel.InterviewQuestions.Any())">
+    Save Interview
+</button> *@
+
+
+@* <div class="mb-3">
+    <button class="btn btn-success" @onclick="GenerateInterviewDoc">
+        <i class="bi bi-plus-circle"></i> Generate Interview Document
+    </button>
+</div> *@
+
+@if(!ViewModel.IsEditMode && !ViewModel.IsConstructMode)
+{
+    <InterviewList />
+}
+
+@if(ViewModel.IsEditMode)
+{
+    <InterviewEdit />
+}
+
+@if (ViewModel.IsConstructMode)
+{
+    <InterviewConstruction />
+}
+
+
+
+
+

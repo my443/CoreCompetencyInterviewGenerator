@@ -14,36 +14,26 @@ namespace CoreCompetencyInterviewGenerator.Data
         private readonly string _connectionString;
         public bool IsDatabaseAvailable { get; set; }
 
-        public AppDbContextFactory(IConfiguration configuration)
-        {
-            Configuration = configuration;
-            //_connectionString = $"Data Source={Preferences.Get("DatabaseFilePath", "")}";
-            //_connectionString = "Data Source=c:\\temp\\app.db";
-        }
+        public AppDbContextFactory(){}
 
 
         public AppDbContext CreateDbContext()
         {
             var optionsBuilder = new DbContextOptionsBuilder<AppDbContext>();
 
-            //var dbPath = Preferences.Get("DatabaseFilePath", string.Empty);
-            var dbPath = Configuration["DatabaseSettings:DatabaseFilePath"];
+            // Define your path manually here
+            string dbPath = @"C:\Temp\InterviewApp.db";
 
-            //// If no path is set in preferences, default to a file on the desktop
-            //if (string.IsNullOrWhiteSpace(dbPath)) {
-            //    string desktopDirectory = Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory);
-            //    dbPath = Path.Combine(desktopDirectory, "interviews.db");
-            //}
+            // Ensure the directory exists so it doesn't crash
+            var folder = Path.GetDirectoryName(dbPath);
+            if (!string.IsNullOrEmpty(folder) && !Directory.Exists(folder))
+            {
+                Directory.CreateDirectory(folder);
+            }
 
-            string connectionString = $"Data Source={dbPath}";
-            optionsBuilder.UseSqlite(connectionString);
+            optionsBuilder.UseSqlite($"Data Source={dbPath}");
 
-            var context = new AppDbContext(optionsBuilder.Options);
-
-            // Ensure the database and schema exist
-            context.Database.EnsureCreated();
-
-            return context;
+            return new AppDbContext(optionsBuilder.Options);
         }
     }
 }

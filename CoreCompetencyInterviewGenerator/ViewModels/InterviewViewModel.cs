@@ -62,6 +62,7 @@ namespace CoreCompetencyInterviewGenerator.ViewModels
         private bool _interviewIsActive = true;
         public bool InterviewIsActive { get => _interviewIsActive; set => SetProperty(ref _interviewIsActive, value); }
 
+
         public string InterviewIsActiveString
         {
             get => Interview?.IsActive.ToString().ToLower() ?? "true";
@@ -90,29 +91,21 @@ namespace CoreCompetencyInterviewGenerator.ViewModels
         public string DatabaseFilePath { get; set; }
         private IConfiguration Configuration { get; set; }
 
-        public InterviewViewModel(AppDbContextFactory contextFactory, IConfiguration configuration)
+        public InterviewViewModel(AppDbContextFactory contextFactory)
         {
             _contextFactory = contextFactory;
-            Configuration = configuration;
+            _context = _contextFactory.CreateDbContext();
 
-            InterviewTemplatePath = Configuration["DatabaseSettings:DatabaseFilePath"]; 
-            DatabaseFilePath = Configuration["DatabaseSettings:DatabaseFilePath"];
+            //InterviewTemplatePath = Configuration["DatabaseSettings:DatabaseFilePath"]; 
+            //DatabaseFilePath = Configuration["DatabaseSettings:DatabaseFilePath"];
 
-            if (!IsDatabaseAvailable())
-            {
-                DatabaseIsAvailable = false;
-            }
-            else
-            {
-                DatabaseIsAvailable = true;
-                _context = _contextFactory.CreateDbContext();
-                LoadCategories();
-                LoadInterviews();
-            }
+            LoadCategories();
+            LoadInterviews();
         }
 
         public void LoadCategories()
         {
+            using var _context = _contextFactory.CreateDbContext();
             Categories = _context.Categories.ToList();
         }
 
@@ -128,7 +121,7 @@ namespace CoreCompetencyInterviewGenerator.ViewModels
 
         public void LoadInterviews()
         {
-
+            using var _context = _contextFactory.CreateDbContext();
             Interviews = _context.Interviews
                 .Include(i => i.Questions)
                 .OrderByDescending(i => i.DateCreated)
@@ -137,6 +130,7 @@ namespace CoreCompetencyInterviewGenerator.ViewModels
 
         public void AddNewInterview()
         {
+            using var _context = _contextFactory.CreateDbContext();
             InterviewName = "<<New Interview>>";
             InterviewDate = DateTime.Today;
             IsAddMode = true;
@@ -160,7 +154,7 @@ namespace CoreCompetencyInterviewGenerator.ViewModels
 
         public void SaveInterview()
         {
-            //using var db = _contextFactory.CreateDbContext();           
+            using var _context = _contextFactory.CreateDbContext();           
             Interview.InterviewName = InterviewName;
             Interview.DateCreated = InterviewDate;
             //Interview.IsActive = InterviewIsActive;
@@ -277,14 +271,14 @@ namespace CoreCompetencyInterviewGenerator.ViewModels
         {
             var integrityCheck = new AppDbIntegrityCheck(_contextFactory);
 
-            if (DatabaseFilePath == null)
-            {
-                DatabaseIsAvailable = false;
-            }
-            else
-            {
-                DatabaseIsAvailable = integrityCheck.IsValidDatabase();
-            }
+            //if (DatabaseFilePath == null)
+            //{
+            //    DatabaseIsAvailable = false;
+            //}
+            //else
+            //{
+            //    DatabaseIsAvailable = integrityCheck.IsValidDatabase();
+            //}
             return DatabaseIsAvailable;
         }
 

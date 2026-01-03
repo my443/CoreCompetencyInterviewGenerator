@@ -1,15 +1,21 @@
 using CoreCompetencyInterviewGenerator.Components;
 using CoreCompetencyInterviewGenerator.Data;
 using CoreCompetencyInterviewGenerator.ViewModels;
+using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
-string dbPath = builder.Configuration["DatabaseSettings:DatabaseFilePath"] ?? "Not Set";
+
+// Add services to the container.
+var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
+
+builder.Services.AddDbContext<AppDbContext>(options =>
+                    options.UseSqlite(connectionString)); // Using SQLite for the database      
 
 // Add services to the container.
 builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents();
 
-builder.Services.AddSingleton<AppDbContextFactory>();
+builder.Services.AddScoped<AppDbContextFactory>();
 
 builder.Services.AddScoped<CategoryViewModel>();
 builder.Services.AddScoped<QuestionViewModel>();

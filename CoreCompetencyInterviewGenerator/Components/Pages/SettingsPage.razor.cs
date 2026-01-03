@@ -31,7 +31,7 @@ public partial class SettingsPage
             Navigation.NavigateTo("/settings");
         }
         DisplayPath = dbPath;
-        _appDbFactory = new AppDbContextFactory(Configuration);
+        _appDbFactory = new AppDbContextFactory();
 
         _appDbIntegrityCheck = new AppDbIntegrityCheck(_appDbFactory);
     }

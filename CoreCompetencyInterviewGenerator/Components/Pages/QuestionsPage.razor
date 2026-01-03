@@ -88,17 +88,11 @@ else
 
 @code {
 
-    [Inject] public IConfiguration Configuration { get; set; }
     private Category? Category;
     // private QuestionViewModel? ViewModel;
 
     protected override void OnInitialized()
     {
-        if (Configuration["DatabaseSettings:DatabaseFilePath"] == null)
-        {
-            Navigation.NavigateTo($"/settings");
-        }
-
         using var db = ContextFactory.CreateDbContext();
         Category = db.Categories.FirstOrDefault(c => c.Id == ViewModel.CategoryId);
 

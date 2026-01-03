@@ -26,14 +26,10 @@ public partial class SettingsPage
         // Access the value using the colon ":" to drill into JSON sections
         var dbPath = Configuration["DatabaseSettings:DatabaseFilePath"];
 
-        if (string.IsNullOrEmpty(dbPath) || dbPath == "Not Set")
-        {
-            Navigation.NavigateTo("/settings");
-        }
         DisplayPath = dbPath;
         _appDbFactory = new AppDbContextFactory();
 
-        _appDbIntegrityCheck = new AppDbIntegrityCheck(_appDbFactory);
+        //_appDbIntegrityCheck = new AppDbIntegrityCheck(_appDbFactory);
     }
 
     private async Task SelectDifferentDatabase()

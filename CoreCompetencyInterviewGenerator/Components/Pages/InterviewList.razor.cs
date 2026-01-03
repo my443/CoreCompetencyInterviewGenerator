@@ -18,13 +18,6 @@ namespace CoreCompetencyInterviewGenerator.Components.Pages
         bool _isPicking = false;
         protected override void OnInitialized()
         {
-            var dbPath = Configuration["DatabaseSettings:DatabaseFilePath"];
-
-            if (string.IsNullOrEmpty(dbPath) || dbPath == "Not Set")
-            {
-                Navigation.NavigateTo("/settings");
-            }
-
             ViewModel.OnChange += OnViewModelChanged;
         }
         private void AddNewInterview()

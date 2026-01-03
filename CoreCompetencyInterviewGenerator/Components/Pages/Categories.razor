@@ -80,14 +80,10 @@
 
 @code {
 
-    [Inject] public IConfiguration Configuration { get; set; }
 
     protected override void OnInitialized()
     {
-        if (Configuration["DatabaseSettings:DatabaseFilePath"] == null)
-        {
-            Navigation.NavigateTo($"/settings");
-        }
+
     }
     public void GoToQuestions(int categoryId)
     {

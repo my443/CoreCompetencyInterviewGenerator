@@ -6,6 +6,7 @@ using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
+// Get the Word template path from configuration and set it in AppSettings
 var path = builder.Configuration["WordFileSettings:Location"];
 AppSettings.WordTemplatePath = path;
 
@@ -15,7 +16,7 @@ var connectionString = builder.Configuration.GetConnectionString("DefaultConnect
 builder.Services.AddDbContext<AppDbContext>(options =>
                     options.UseSqlite(connectionString)); // Using SQLite for the database      
 
-// Add services to the container.
+
 builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents();
 

@@ -84,9 +84,10 @@ namespace CoreCompetencyInterviewGenerator.ViewModels
         private bool _isConstructMode = false;
         public bool IsConstructMode { get => _isConstructMode; set => SetProperty(ref _isConstructMode, value); }
 
-        private bool _databaseIsAvailable = false;
+        private bool _databaseIsAvailable = true;
         public bool DatabaseIsAvailable { get => _databaseIsAvailable; set => SetProperty(ref _databaseIsAvailable, value); }
         public string InterviewTemplatePath { get; set; }
+        public string DatabaseFilePath { get; set; }
         private IConfiguration Configuration { get; set; }
 
         public InterviewViewModel(AppDbContextFactory contextFactory, IConfiguration configuration)
@@ -95,6 +96,7 @@ namespace CoreCompetencyInterviewGenerator.ViewModels
             Configuration = configuration;
 
             InterviewTemplatePath = Configuration["DatabaseSettings:DatabaseFilePath"]; 
+            DatabaseFilePath = Configuration["DatabaseSettings:DatabaseFilePath"];
 
             if (!IsDatabaseAvailable())
             {
@@ -274,7 +276,8 @@ namespace CoreCompetencyInterviewGenerator.ViewModels
         public bool IsDatabaseAvailable()
         {
             var integrityCheck = new AppDbIntegrityCheck(_contextFactory);
-            if (Configuration["DatabaseSettings:DatabaseFilePath"] != null)
+
+            if (DatabaseFilePath == null)
             {
                 DatabaseIsAvailable = false;
             }

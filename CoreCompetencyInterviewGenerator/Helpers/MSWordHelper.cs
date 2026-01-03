@@ -8,14 +8,15 @@ namespace CoreCompetencyInterviewGenerator.Helpers
 {
     public class MSWordHelper
     {
-        [Inject] public IConfiguration Configuration { get; set; }
+        public IConfiguration Configuration { get; set; }
 
         private readonly AppDbContextFactory _contextFactory;
         private string _templatePath;
         public MSWordHelper(AppDbContextFactory contextFactory)
         {
             _contextFactory = contextFactory;
-            _templatePath = Configuration["DatabaseSettings:DatabaseFilePath"];
+            //Configuration = configuration;
+            _templatePath = AppSettings.WordTemplatePath;
         }
        
         public MemoryStream GenerateInterviewDoc(int interviewId)

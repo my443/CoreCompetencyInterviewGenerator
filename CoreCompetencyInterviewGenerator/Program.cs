@@ -1,9 +1,13 @@
 using CoreCompetencyInterviewGenerator.Components;
 using CoreCompetencyInterviewGenerator.Data;
+using CoreCompetencyInterviewGenerator.Helpers;
 using CoreCompetencyInterviewGenerator.ViewModels;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
+
+var path = builder.Configuration["WordFileSettings:Location"];
+AppSettings.WordTemplatePath = path;
 
 // Add services to the container.
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");

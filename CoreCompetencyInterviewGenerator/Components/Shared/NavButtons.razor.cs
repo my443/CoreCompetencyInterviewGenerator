@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace InterviewGeneratorBlazorHybrid.Components.Shared
+namespace CoreCompetencyInterviewGenerator.Components.Shared
 {
     public partial class NavButtons
     {

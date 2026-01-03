@@ -1,9 +1,9 @@
-﻿using InterviewGeneratorBlazorHybrid.Data;
-using InterviewGeneratorBlazorHybrid.Models;
+﻿using CoreCompetencyInterviewGenerator.Data;
+using CoreCompetencyInterviewGenerator.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Internal;
 
-namespace InterviewGeneratorBlazorHybrid.ViewModels
+namespace CoreCompetencyInterviewGenerator.ViewModels
 {
     public class CategoryViewModel
     {

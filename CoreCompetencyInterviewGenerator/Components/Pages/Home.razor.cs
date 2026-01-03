@@ -1,6 +1,6 @@
-﻿using InterviewGeneratorBlazorHybrid.Data;
+﻿using CoreCompetencyInterviewGenerator.Data;
 
-namespace InterviewGeneratorBlazorHybrid.Components.Pages
+namespace CoreCompetencyInterviewGenerator.Components.Pages
 {
     public partial class Home
     {

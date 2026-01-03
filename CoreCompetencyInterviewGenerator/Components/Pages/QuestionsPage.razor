@@ -1,7 +1,7 @@
 ﻿@page "/questions"
-@using InterviewGeneratorBlazorHybrid.Models
-@using InterviewGeneratorBlazorHybrid.ViewModels
-@using InterviewGeneratorBlazorHybrid.Data
+@using CoreCompetencyInterviewGenerator.Models
+@using CoreCompetencyInterviewGenerator.ViewModels
+@using CoreCompetencyInterviewGenerator.Data
 
 @inject AppDbContextFactory ContextFactory
 @inject QuestionViewModel ViewModel
@@ -86,13 +86,13 @@ else
 
 @code {
 
-
+    [Inject] public IConfiguration Configuration { get; set; }
     private Category? Category;
     // private QuestionViewModel? ViewModel;
 
     protected override void OnInitialized()
     {
-        if (Preferences.Get("DatabaseFilePath", "Not Set") == "Not Set")
+        if (Configuration["DatabaseSettings:DatabaseFilePath"] == null)
         {
             Navigation.NavigateTo($"/settings");
         }

@@ -1,7 +1,7 @@
-﻿using InterviewGeneratorBlazorHybrid.Data;
-using InterviewGeneratorBlazorHybrid.Models;
+﻿using CoreCompetencyInterviewGenerator.Data;
+using CoreCompetencyInterviewGenerator.Models;
 
-namespace InterviewGeneratorBlazorHybrid.ViewModels
+namespace CoreCompetencyInterviewGenerator.ViewModels
 {
     public class QuestionViewModel
     {

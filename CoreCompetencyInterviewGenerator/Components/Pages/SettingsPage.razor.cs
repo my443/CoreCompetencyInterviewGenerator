@@ -1,28 +1,38 @@
-﻿using CommunityToolkit.Maui.Storage;
-using InterviewGeneratorBlazorHybrid.Data;
-using InterviewGeneratorBlazorHybrid.Helpers;
-using InterviewGeneratorBlazorHybrid.Models;
-using InterviewGeneratorBlazorHybrid.ViewModels;
+﻿
+using CoreCompetencyInterviewGenerator.Data;
+using CoreCompetencyInterviewGenerator.Helpers;
+using CoreCompetencyInterviewGenerator.Models;
+using CoreCompetencyInterviewGenerator.ViewModels;
+using Microsoft.AspNetCore.Components;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
 
-namespace InterviewGeneratorBlazorHybrid.Components.Pages;
+namespace CoreCompetencyInterviewGenerator.Components.Pages;
 
 public partial class SettingsPage
 {
+    [Inject] public IConfiguration Configuration { get; set; }
+    [Inject] public NavigationManager Navigation { get; set; }
+
     private bool _isPicking;
     private string GeneralMessage = string.Empty;
     private string ErrorMessage = string.Empty;
     private string SuccessMessage = string.Empty;
     private string DisplayPath = "Not Set";       
-    private AppDbContextFactory _appDbFactory = new AppDbContextFactory();
+    private AppDbContextFactory _appDbFactory;
     private AppDbIntegrityCheck _appDbIntegrityCheck;
 
     protected override void OnInitialized()
     {
-        if (Preferences.Get("DatabaseFilePath", "Not Set") == "Not Set")
+        // Access the value using the colon ":" to drill into JSON sections
+        var dbPath = Configuration["DatabaseSettings:DatabaseFilePath"];
+
+        if (string.IsNullOrEmpty(dbPath) || dbPath == "Not Set")
         {
-            GeneralMessage = "You haven't selected a valid database file yet. Please select one to proceed.";
+            Navigation.NavigateTo("/settings");
         }
-        DisplayPath = Preferences.Get("DatabaseFilePath", "Not set");            
+        DisplayPath = dbPath;
+        _appDbFactory = new AppDbContextFactory(Configuration);
+
         _appDbIntegrityCheck = new AppDbIntegrityCheck(_appDbFactory);
     }
 
@@ -34,29 +44,29 @@ public partial class SettingsPage
         _isPicking = true;
         try
         {
-            var result = await FilePicker.Default.PickAsync();
-            if (result != null)
-            {
-                // FullPath may be null on some platforms — fall back to FileName if needed.
-                var selectedPath = result.FullPath ?? result.FileName;
-                // Set the preferences, then validate the database
-                Preferences.Set("DatabaseFilePath", selectedPath);
+            //var result = await FilePicker.Default.PickAsync();
+            //if (result != null)
+            //{
+            //    // FullPath may be null on some platforms — fall back to FileName if needed.
+            //    var selectedPath = result.FullPath ?? result.FileName;
+            //    // Set the preferences, then validate the database
+            //    Preferences.Set("DatabaseFilePath", selectedPath);
 
-                if (!_appDbIntegrityCheck.IsValidDatabase())
-                {
-                    DisplayErrorMessage("The selected file is not a valid database. Please select a different file.");
-                }
-                else
-                {
-                    DisplaySuccessMessage(selectedPath);
-                    ResetViewModels();
-                }
+            //    if (!_appDbIntegrityCheck.IsValidDatabase())
+            //    {
+            //        DisplayErrorMessage("The selected file is not a valid database. Please select a different file.");
+            //    }
+            //    else
+            //    {
+            //        DisplaySuccessMessage(selectedPath);
+            //        ResetViewModels();
+            //    }
 
 
-                // DisplayPath = selectedPath;
-                // StateHasChanged();
-                // NavigationManager.NavigateTo("/");
-            }
+            //    // DisplayPath = selectedPath;
+            //    // StateHasChanged();
+            //    // NavigationManager.NavigateTo("/");
+            //}
         }
         catch (Exception ex)
         {
@@ -77,26 +87,26 @@ public partial class SettingsPage
         _isPicking = true;
         try
         {
-            var result = await FilePicker.Default.PickAsync();
-            if (result != null)
-            {
+            //var result = await FilePicker.Default.PickAsync();
+            //if (result != null)
+            //{
                 
-                var selectedPath = result.FullPath ?? result.FileName;                
-                Preferences.Set("TemplateDocumentPath", selectedPath);
-                InterviewViewModel.UpdateTemplatePath(selectedPath);
+            //    var selectedPath = result.FullPath ?? result.FileName;                
+            //    Preferences.Set("TemplateDocumentPath", selectedPath);
+            //    InterviewViewModel.UpdateTemplatePath(selectedPath);
 
-                // TODO - DO AN INTEGRITY CHECK ON THE TEMPLATE FILE
+            //    // TODO - DO AN INTEGRITY CHECK ON THE TEMPLATE FILE
 
-                //if (!_appDbIntegrityCheck.IsValidDatabase())
-                //{
-                //    DisplayErrorMessage("The selected file is not a valid database. Please select a different file.");
-                //}
-                //else
-                //{
-                //    DisplaySuccessMessage(selectedPath);
-                //    ResetViewModels();
-                //}
-            }
+            //    //if (!_appDbIntegrityCheck.IsValidDatabase())
+            //    //{
+            //    //    DisplayErrorMessage("The selected file is not a valid database. Please select a different file.");
+            //    //}
+            //    //else
+            //    //{
+            //    //    DisplaySuccessMessage(selectedPath);
+            //    //    ResetViewModels();
+            //    //}
+            //}
         }
         catch (Exception ex)
         {
@@ -114,27 +124,27 @@ public partial class SettingsPage
         SuccessMessage = string.Empty;
         try
         {
-            var docxTypes = new FilePickerFileType(new Dictionary<DevicePlatform, IEnumerable<string>>
-                    {
-                        // Windows: extension works
-                        { DevicePlatform.WinUI, new[] { ".db" } },
+            //var docxTypes = new FilePickerFileType(new Dictionary<DevicePlatform, IEnumerable<string>>
+            //        {
+            //            // Windows: extension works
+            //            { DevicePlatform.WinUI, new[] { ".db" } },
 
-                    });
-            //using MemoryStream stream = new MemoryStream(Encoding.Default.GetBytes("Hello from the Community Toolkit!"));
-            using MemoryStream stream = new MemoryStream();
-            var result = await FileSaver.Default.SaveAsync($"New Database.db", stream, CancellationToken.None);
+            //        });
+            ////using MemoryStream stream = new MemoryStream(Encoding.Default.GetBytes("Hello from the Community Toolkit!"));
+            //using MemoryStream stream = new MemoryStream();
+            //var result = await FileSaver.Default.SaveAsync($"New Database.db", stream, CancellationToken.None);
 
-            if (result != null && (result.IsSuccessful))
-            {
-                // Create the ViewModelStore to pass to the CreateDatabaseHelper
-                //var viewModelStore = new ViewModelStore(CategoryViewModel, QuestionViewModel, InterviewViewModel);
-                CreateDatabaseHelper dbHelper = new CreateDatabaseHelper(_appDbFactory);
-                dbHelper.CreateDatabase(result.FilePath);
+            //if (result != null && (result.IsSuccessful))
+            //{
+            //    // Create the ViewModelStore to pass to the CreateDatabaseHelper
+            //    //var viewModelStore = new ViewModelStore(CategoryViewModel, QuestionViewModel, InterviewViewModel);
+            //    CreateDatabaseHelper dbHelper = new CreateDatabaseHelper(_appDbFactory);
+            //    dbHelper.CreateDatabase(result.FilePath);
 
-                ResetViewModels();
+            //    ResetViewModels();
 
-                DisplaySuccessMessage(result.FilePath);
-            }
+            //    DisplaySuccessMessage(result.FilePath);
+            //}
         }
         catch (Exception ex)
         {
@@ -164,7 +174,7 @@ public partial class SettingsPage
     {
         ErrorMessage = errorMessage;
         DisplayPath = "Not Set";
-        Preferences.Set("DatabaseFilePath", "Not Set");
+        //Preferences.Set("DatabaseFilePath", "Not Set");
     }
 
     private void ClearMessages()

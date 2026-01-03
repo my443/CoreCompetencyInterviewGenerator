@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace InterviewGeneratorBlazorHybrid.Helpers
+namespace CoreCompetencyInterviewGenerator.Helpers
 {
     public static class SampleDatabaseHelper
     {

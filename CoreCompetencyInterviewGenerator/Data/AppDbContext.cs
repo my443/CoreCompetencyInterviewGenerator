@@ -1,7 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using InterviewGeneratorBlazorHybrid.Models;
+using CoreCompetencyInterviewGenerator.Models;
 
-namespace InterviewGeneratorBlazorHybrid.Data
+namespace CoreCompetencyInterviewGenerator.Data
 {
     public class AppDbContext : DbContext
     {

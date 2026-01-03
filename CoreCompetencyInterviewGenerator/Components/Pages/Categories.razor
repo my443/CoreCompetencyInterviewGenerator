@@ -1,5 +1,5 @@
 ﻿@page "/categories"
-@using InterviewGeneratorBlazorHybrid.ViewModels
+@using CoreCompetencyInterviewGenerator.ViewModels
 @inject CategoryViewModel ViewModel
 @inject QuestionViewModel QuestionViewModel
 @inject NavigationManager Navigation
@@ -78,9 +78,12 @@
 }
 
 @code {
+
+    [Inject] public IConfiguration Configuration { get; set; }
+
     protected override void OnInitialized()
     {
-        if (Preferences.Get("DatabaseFilePath", "Not Set") == "Not Set")
+        if (Configuration["DatabaseSettings:DatabaseFilePath"] == null)
         {
             Navigation.NavigateTo($"/settings");
         }

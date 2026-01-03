@@ -1,8 +1,8 @@
-﻿using InterviewGeneratorBlazorHybrid.Data;
-using InterviewGeneratorBlazorHybrid.Helpers;
+﻿using CoreCompetencyInterviewGenerator.Data;
+using CoreCompetencyInterviewGenerator.Helpers;
 using Microsoft.EntityFrameworkCore;
 
-namespace InterviewGeneratorBlazorHybrid.Helpers
+namespace CoreCompetencyInterviewGenerator.Helpers
 {
     internal class CreateDatabaseHelper
     {
@@ -16,7 +16,7 @@ namespace InterviewGeneratorBlazorHybrid.Helpers
 
         public void CreateDatabase(string databaseFilePath)
         {
-            Preferences.Set("DatabaseFilePath", databaseFilePath);
+            //Preferences.Set("DatabaseFilePath", databaseFilePath);
 
             using var context = _contextFactory.CreateDbContext();
             // Ensure the database is deleted, and then is created if needed.

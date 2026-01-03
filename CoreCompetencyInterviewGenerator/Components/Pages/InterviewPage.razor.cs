@@ -1,7 +1,7 @@
-﻿using InterviewGeneratorBlazorHybrid.ViewModels;
+﻿using CoreCompetencyInterviewGenerator.ViewModels;
 using Microsoft.AspNetCore.Components;
 
-namespace InterviewGeneratorBlazorHybrid.Components.Pages
+namespace CoreCompetencyInterviewGenerator.Components.Pages
 {
     public partial class InterviewPage
     {

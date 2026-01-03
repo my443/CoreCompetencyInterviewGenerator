@@ -1,4 +1,3 @@
-@using Microsoft.Maui.Storage
 @inject NavigationManager NavigationManager
 
 <footer class="footer px-4 py-2 border-top text-muted">
@@ -9,6 +8,8 @@
 </footer>
 
 @code {
+    [Inject] public IConfiguration Configuration { get; set; }
+
     private string DisplayPath = "Unavailable";
     private bool _isPicking;
 
@@ -17,7 +18,7 @@
         try
         {
             // Read the saved DatabaseFilePath preference (falls back to "Not set")
-            DisplayPath = Preferences.Get("DatabaseFilePath", "Not set");
+            DisplayPath = Configuration["DatabaseSettings:DatabaseFilePath"];
         }
         catch
         {
@@ -28,33 +29,33 @@
 
     private async Task SelectDifferentDatabase()
     {
-        if (_isPicking)
-            return;
+        // if (_isPicking)
+        //     return;
 
-        _isPicking = true;
-        try
-        {
-            var result = await FilePicker.Default.PickAsync();
-            if (result != null)
-            {
-                // FullPath may be null on some platforms — fall back to FileName if needed.
-                var selectedPath = result.FullPath ?? result.FileName;
+        // _isPicking = true;
+        // try
+        // {
+        //     var result = await FilePicker.Default.PickAsync();
+        //     if (result != null)
+        //     {
+        //         FullPath may be null on some platforms — fall back to FileName if needed.
+        //         var selectedPath = result.FullPath ?? result.FileName;
 
-                Preferences.Set("DatabaseFilePath", selectedPath);
-                DisplayPath = selectedPath;
-                NavigationManager.NavigateTo("/");
-                // StateHasChanged();
-            }
-        }
-        catch (Exception ex)
-        {
-            // Display a short error in the footer if picking fails
-            DisplayPath = $"Error: {ex.Message}";
-            StateHasChanged();
-        }
-        finally
-        {
-            _isPicking = false;
-        }
+        //         Preferences.Set("DatabaseFilePath", selectedPath);
+        //         DisplayPath = selectedPath;
+        //         NavigationManager.NavigateTo("/");
+        //         StateHasChanged();
+        //     }
+        // }
+        // catch (Exception ex)
+        // {
+        //     Display a short error in the footer if picking fails
+        //     DisplayPath = $"Error: {ex.Message}";
+        //     StateHasChanged();
+        // }
+        // finally
+        // {
+        //     _isPicking = false;
+        // }
     }
 }

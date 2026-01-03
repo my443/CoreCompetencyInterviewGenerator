@@ -1,18 +1,21 @@
-﻿using DocumentFormat.OpenXml.Packaging;
+﻿using CoreCompetencyInterviewGenerator.Data;
+using DocumentFormat.OpenXml.Packaging;
 using DocumentFormat.OpenXml.Wordprocessing;
-using InterviewGeneratorBlazorHybrid.Data;
+using Microsoft.AspNetCore.Components;
 using Microsoft.EntityFrameworkCore;
 
-namespace InterviewGeneratorBlazorHybrid.Helpers
+namespace CoreCompetencyInterviewGenerator.Helpers
 {
     public class MSWordHelper
     {
+        [Inject] public IConfiguration Configuration { get; set; }
+
         private readonly AppDbContextFactory _contextFactory;
         private string _templatePath;
         public MSWordHelper(AppDbContextFactory contextFactory)
         {
             _contextFactory = contextFactory;
-            _templatePath = Preferences.Get("TemplateDocumentPath", string.Empty);
+            _templatePath = Configuration["DatabaseSettings:DatabaseFilePath"];
         }
        
         public MemoryStream GenerateInterviewDoc(int interviewId)

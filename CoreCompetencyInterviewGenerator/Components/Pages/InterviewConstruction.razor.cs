@@ -3,7 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace InterviewGeneratorBlazorHybrid.Components.Pages
+namespace CoreCompetencyInterviewGenerator.Components.Pages
 {
     public partial class InterviewConstruction
     {

@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace InterviewGeneratorBlazorHybrid.ViewModels
+namespace CoreCompetencyInterviewGenerator.ViewModels
 {
     /// <summary>
     /// This is a holder of all of the injected ViewModels for easy access.

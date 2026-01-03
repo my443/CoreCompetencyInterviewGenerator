@@ -1,11 +1,14 @@
-using InterviewGeneratorBlazorHybrid.Data;
-using InterviewGeneratorBlazorHybrid.Models;
+using CoreCompetencyInterviewGenerator.Data;
+using CoreCompetencyInterviewGenerator.Models;
+using Microsoft.AspNetCore.Components;
 using Microsoft.EntityFrameworkCore;
 
-namespace InterviewGeneratorBlazorHybrid.ViewModels
+namespace CoreCompetencyInterviewGenerator.ViewModels
 {
     public class InterviewViewModel
     {
+        //[Inject] public IConfiguration Configuration { get; set; }
+
         private readonly AppDbContextFactory _contextFactory;
         public AppDbContext _context { get; set; }
 
@@ -84,11 +87,14 @@ namespace InterviewGeneratorBlazorHybrid.ViewModels
         private bool _databaseIsAvailable = false;
         public bool DatabaseIsAvailable { get => _databaseIsAvailable; set => SetProperty(ref _databaseIsAvailable, value); }
         public string InterviewTemplatePath { get; set; }
+        private IConfiguration Configuration { get; set; }
 
-        public InterviewViewModel(AppDbContextFactory contextFactory)
+        public InterviewViewModel(AppDbContextFactory contextFactory, IConfiguration configuration)
         {
             _contextFactory = contextFactory;
-            InterviewTemplatePath = Preferences.Get("TemplateDocumentPath", string.Empty);
+            Configuration = configuration;
+
+            InterviewTemplatePath = Configuration["DatabaseSettings:DatabaseFilePath"]; 
 
             if (!IsDatabaseAvailable())
             {
@@ -268,7 +274,7 @@ namespace InterviewGeneratorBlazorHybrid.ViewModels
         public bool IsDatabaseAvailable()
         {
             var integrityCheck = new AppDbIntegrityCheck(_contextFactory);
-            if (Preferences.Get("DatabaseFilePath", "Not Set") == "Not Set")
+            if (Configuration["DatabaseSettings:DatabaseFilePath"] != null)
             {
                 DatabaseIsAvailable = false;
             }
@@ -328,8 +334,8 @@ namespace InterviewGeneratorBlazorHybrid.ViewModels
 
         internal void UpdateTemplatePath(string selectedPath)
         {
-            Preferences.Set("TemplateDocumentPath", selectedPath);
-            InterviewTemplatePath = Preferences.Get("TemplateDocumentPath", string.Empty);
+            //Preferences.Set("TemplateDocumentPath", selectedPath);
+            //InterviewTemplatePath = Preferences.Get("TemplateDocumentPath", string.Empty);
             NotifyStateChanged();
         }
     }

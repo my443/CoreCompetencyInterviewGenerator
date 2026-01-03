@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 
-namespace InterviewGeneratorBlazorHybrid.Data
+namespace CoreCompetencyInterviewGenerator.Data
 {
     internal class AppDbIntegrityCheck
     {

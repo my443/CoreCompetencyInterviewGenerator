@@ -4,6 +4,8 @@
 
 @inject AppDbContextFactory ContextFactory
 @inject InterviewViewModel ViewModel
+@rendermode InteractiveServer
+
 @if (!ViewModel.IsConstructMode)
 {
     <button type="button" class="btn btn-primary me-2" @onclick="ViewModel.EnterConstructionMode">Add and Remove Questions</button>

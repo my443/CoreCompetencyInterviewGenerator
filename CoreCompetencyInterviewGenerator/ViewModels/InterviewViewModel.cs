@@ -165,7 +165,7 @@ namespace CoreCompetencyInterviewGenerator.ViewModels
 
             dbInterview.InterviewName = InterviewName;
             dbInterview.DateCreated = InterviewDate;
-            //Interview.IsActive = InterviewIsActive;
+            dbInterview.IsActive = InterviewIsActive;
             if (_context == null) {
                 return;
             }
@@ -196,6 +196,7 @@ namespace CoreCompetencyInterviewGenerator.ViewModels
                 SuccessMessage = "Interview Name, Date and Status Updated.";
             }
 
+            LoadInterviews();
             NotifyStateChanged();
         }
         public void LoadInterviewById(int interviewId)
@@ -257,6 +258,7 @@ namespace CoreCompetencyInterviewGenerator.ViewModels
 
         public void ExitConstructionMode()
         {
+            LoadInterviews();
             SaveInterview();
             IsConstructMode = false;
             NotifyStateChanged();

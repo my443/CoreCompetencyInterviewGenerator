@@ -9,7 +9,6 @@ namespace CoreCompetencyInterviewGenerator.Components.Pages
 {
     public partial class InterviewList
     {
-        [Inject] public IConfiguration Configuration { get; set; }
         [Inject] public IJSRuntime JS { get; set; }
 
         string ErrorMessage = string.Empty;
@@ -63,7 +62,7 @@ namespace CoreCompetencyInterviewGenerator.Components.Pages
         private void DisplayErrorMessage()
         {
             ErrorMessage = "<p class=\"alert-danger\">The file couldn't be saved. There was an error. Please try again." +
-                            "<br/>If the problem persists, go to <u>Settings</u> to select a different template file.</p>";
+                            "<br/>";
         }
 
         private void DisplaySuccessMessage(string savedPath)

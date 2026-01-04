@@ -1,7 +1,9 @@
 using CoreCompetencyInterviewGenerator.Data;
 using CoreCompetencyInterviewGenerator.Models;
+using DocumentFormat.OpenXml.InkML;
 using Microsoft.AspNetCore.Components;
 using Microsoft.EntityFrameworkCore;
+using System;
 
 namespace CoreCompetencyInterviewGenerator.ViewModels
 {
@@ -154,13 +156,39 @@ namespace CoreCompetencyInterviewGenerator.ViewModels
 
         public void SaveInterview()
         {
-            using var _context = _contextFactory.CreateDbContext();           
-            Interview.InterviewName = InterviewName;
-            Interview.DateCreated = InterviewDate;
+            using var _context = _contextFactory.CreateDbContext();
+            var dbInterview = _context.Interviews
+                                    .Include(i => i.Questions)
+                                    .FirstOrDefault(i => i.Id == Interview.Id);
+
+            if (dbInterview == null) return;
+
+            dbInterview.InterviewName = InterviewName;
+            dbInterview.DateCreated = InterviewDate;
             //Interview.IsActive = InterviewIsActive;
             if (_context == null) {
                 return;
             }
+
+            foreach (var q in Interview.Questions)
+            {
+                // 1. Check if the context is already tracking a Question with this ID
+                var trackedQuestion = _context.Questions.Local.FirstOrDefault(x => x.Id == q.Id);
+
+                if (trackedQuestion != null)
+                {
+                    // 2. If it's already tracked, use the version the context already knows about
+                    dbInterview.Questions.Add(trackedQuestion);
+                }
+                else
+                {
+                    // 3. If it's NOT tracked, attach it now
+                    _context.Questions.Attach(q);
+                    dbInterview.Questions.Add(q);
+                }
+            }
+
+
             _context.SaveChanges();
 
             if (!IsConstructMode)
@@ -238,22 +266,49 @@ namespace CoreCompetencyInterviewGenerator.ViewModels
         {
             if (SelectedQuestionId == null) return;
 
+            using var _context = _contextFactory.CreateDbContext();
+
+            // Load the interview from the database including its questions
+            var dbInterview = _context.Interviews
+                                .Include(i => i.Questions)
+                                .FirstOrDefault(i => i.Id == Interview.Id);
+            
+            if (dbInterview == null) return;
+
+            var dbQuestion = _context.Questions.Find(SelectedQuestionId);
+
             Question? question = AvailableQuestions.FirstOrDefault(q => q.Id == SelectedQuestionId);
 
             if (question != null && !Interview.Questions.Any(q => q.Id == question.Id))
             {
+                // Add to the database relationship
+                dbInterview.Questions.Add(dbQuestion);
+                _context.SaveChanges();
+
+                // Add to the list
                 Interview.Questions.Add(question);
                 SaveInterview();
                 NotifyStateChanged();
             }
-
         }
 
         public void RemoveQuestionFromInterview(int questionId)
         {
+            using var _context = _contextFactory.CreateDbContext();
             var question = Interview.Questions.FirstOrDefault(q => q.Id == questionId);
+
+            var dbInterview = _context.Interviews
+                    .Include(i => i.Questions)
+                    .FirstOrDefault(i => i.Id == Interview.Id);
+
+            var dbQuestion = _context.Questions.Find(questionId);
+
             if (question != null)
             {
+                // Remove from the database relationship
+                dbInterview.Questions.Remove(dbQuestion);
+                _context.SaveChanges();
+
                 Interview.Questions.Remove(question);
                 SaveInterview();
                 NotifyStateChanged();
